@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Match Notification - Campus Lost & Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
+
+  <div class="w-full max-w-4xl">
+    
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Potential Match Found!</h1>
+      <p class="text-gray-600">Review the details and confirm if this is your lost item.</p>
+    </div>
+
+    <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+      
+      <div class="p-4 bg-blue-600 text-white text-center">
+        <span class="font-semibold text-lg">Match Score: {{ match_score }}%</span>
+      </div>
+
+      <div class="p-6">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-b pb-6 mb-6">
+          
+          <div>
+            <h2 class="text-xl font-bold text-blue-700 mb-3 border-b pb-2">Your Lost Item: {{ lost_item.name }}</h2>
+            <p class="text-gray-700 mb-4">
+              <span class="font-semibold">Description:</span> {{ lost_item.description }}
+            </p>
+            <p class="text-gray-700 mb-4">
+              <span class="font-semibold">Features:</span> {{ lost_item.features }}
+            </p>
+            {% if lost_item.photo %}
+              <img src="{{ lost_item.photo.url }}" alt="{{ lost_item.name }}" class="w-full h-40 object-cover rounded-lg shadow-sm">
+            {% else %}
+              <div class="h-40 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">No Photo Uploaded</div>
+            {% endif %}
+          </div>
+
+          <div class="md:border-l md:pl-6 border-gray-200">
+            <h2 class="text-xl font-bold text-green-700 mb-3 border-b pb-2">Found Item: {{ found_item.name }}</h2>
+            <p class="text-gray-700 mb-4">
+              <span class="font-semibold">Description:</span> {{ found_item.description }}
+            </p>
+            <p class="text-gray-700 mb-4">
+              <span class="font-semibold">Features:</span> {{ found_item.features }}
+            </p>
+            {% if found_item.photo %}
+              <img src="{{ found_item.photo.url }}" alt="{{ found_item.name }}" class="w-full h-40 object-cover rounded-lg shadow-sm">
+            {% else %}
+              <div class="h-40 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">No Photo Uploaded</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-300">
+          <h3 class="text-lg font-semibold text-yellow-800 flex items-center gap-2 mb-3">
+            <i data-feather="user" class="h-5 w-5"></i> Founder's Contact Information
+          </h3>
+          <ul class="space-y-2 text-gray-700">
+            <li><span class="font-semibold w-24 inline-block">Username:</span> {{ found_user.username }}</li>
+            <li><span class="font-semibold w-24 inline-block">Email:</span> <a href="mailto:{{ found_user.email }}" class="text-blue-600 hover:underline">{{ found_user.email }}</a></li>
+            <li><span class="font-semibold w-24 inline-block">Phone:</span> <a href="tel:{{ found_user.phone }}" class="text-blue-600 hover:underline">{{ found_user.phone }}</a></li>
+          </ul>
+          <p class="text-sm text-yellow-700 mt-3">Please contact the founder directly if you confirm this is your item.</p>
+        </div>
+
+      </div>
+
+      <div class="p-6 bg-gray-50 border-t flex justify-end gap-3">
+        <a href="{% url 'handle_match_action' lost_item.id found_item.id 'ignore' %}" 
+           class="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-500 transition font-medium">
+          Ignore Match
+        </a>
+        
+        <a href="{% url 'handle_match_action' lost_item.id found_item.id 'accept' %}" 
+           class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition font-medium">
+          ✅ Confirm & Accept Match
+        </a>
+      </div>
+
+    </div>
+    
+    <div class="text-center mt-4">
+      <a href="{% url 'dashboard' %}" class="text-blue-600 hover:underline text-sm font-medium">
+        <i data-feather="arrow-left" class="h-4 w-4 inline-block"></i> Back to Dashboard
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    feather.replace();
+  </script>
+</body>
+</html>

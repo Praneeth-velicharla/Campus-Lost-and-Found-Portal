@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Report Found Item - Campus Lost & Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+
+  <!-- Header -->
+  <header class="py-4 bg-white shadow mb-6">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-green-600">Campus Lost & Found</h1>
+      <a href="{% url 'dashboard' %}" class="text-green-600 hover:underline font-medium flex items-center gap-2">
+        <i data-feather="arrow-left"></i> Back to Dashboard
+      </a>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white rounded-lg shadow">
+
+      <!-- Header with live count -->
+      <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-semibold">Report Found Item</h2>
+          <p class="text-gray-600 mt-1">Please provide detailed information about the item you found.</p>
+        </div>
+        <div class="text-green-600 font-bold">
+          My Found Items: <span id="found-count">{{ found_items.count }}</span>
+        </div>
+      </div>
+
+      <div class="p-6">
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <!-- Item Name -->
+          <div class="space-y-2">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+            {% if form.name.errors %}
+              <p class="text-red-500 text-sm">{{ form.name.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Description -->
+          <div class="space-y-2">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+            {% if form.description.errors %}
+              <p class="text-red-500 text-sm">{{ form.description.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Features -->
+          <div class="space-y-2">
+            {{ form.features.label_tag }}
+            {{ form.features }}
+            {% if form.features.errors %}
+              <p class="text-red-500 text-sm">{{ form.features.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Photo Upload (mandatory) -->
+          <div class="space-y-2">
+            <label class="block font-medium text-gray-700">Photo (required)</label>
+
+            <div id="photoPreviewArea" class="hidden space-y-3">
+              <div class="relative inline-block">
+                <img id="photoPreview" src="" alt="Preview" class="w-48 h-48 object-cover rounded-lg border" />
+                <button type="button" id="removePhotoBtn" class="absolute top-2 right-2 bg-red-600 text-white rounded p-1 hover:bg-red-700 focus:outline-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div id="photoUploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-100 cursor-pointer text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M8 12l3-3m0 0l3 3m-3-3v9" />
+              </svg>
+              <label for="photoInput" class="block font-medium text-green-600 hover:underline cursor-pointer">Click to upload a photo</label>
+              <p class="mt-2 text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+            </div>
+
+            <!-- Hidden File Input -->
+            {{ form.photo }}
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex gap-3 pt-6">
+            <button type="submit" class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
+              Report Found Item
+            </button>
+            <a href="{% url 'dashboard' %}" class="flex-1 border border-green-600 text-green-600 py-2 rounded text-center hover:bg-green-100 transition">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    feather.replace();
+
+    const photoInput = document.getElementById('photoInput');
+    const photoPreview = document.getElementById('photoPreview');
+    const photoPreviewArea = document.getElementById('photoPreviewArea');
+    const photoUploadArea = document.getElementById('photoUploadArea');
+    const removePhotoBtn = document.getElementById('removePhotoBtn');
+
+    // Handle file selection
+    photoInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        photoPreview.src = url;
+        photoPreviewArea.classList.remove('hidden');
+        photoUploadArea.classList.add('hidden');
+      }
+    });
+
+    // Prevent removal since photo is mandatory
+    removePhotoBtn.addEventListener('click', () => {
+      alert('Photo is required and cannot be removed.');
+    });
+  </script>
+</body>
+</html>
