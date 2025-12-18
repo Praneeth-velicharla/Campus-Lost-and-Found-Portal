@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Signup - Campus Lost & Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    ul.errorlist {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+    .helptext {
+      display: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="flex justify-center mb-4">
+        <div class="bg-blue-600 text-white p-3 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.84 6.548 8 8 0 01-10 0 12.083 12.083 0 01.84-6.548L12 14z" />
+          </svg>
+        </div>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Campus Lost & Found</h1>
+      <p class="text-gray-600">Create your account</p>
+    </div>
+
+    <!-- Signup Card -->
+    <div class="bg-white shadow-lg rounded-lg">
+      <div class="p-6 border-b border-gray-200">
+        <h2 class="text-xl font-semibold mb-1">Create Account</h2>
+        <p class="text-gray-600">Join our campus community to report and find lost items</p>
+      </div>
+      <div class="p-6">
+        {% if messages %}
+          {% for message in messages %}
+            <p class="text-center text-sm {% if message.tags == 'error' %}text-red-600{% else %}text-green-600{% endif %}">
+              {{ message }}
+            </p>
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST" novalidate class="space-y-4">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <!-- Username -->
+          <div class="space-y-2">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% for error in form.username.errors %}
+              <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+          </div>
+
+          <!-- Email -->
+          <div class="space-y-2">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% for error in form.email.errors %}
+              <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <!-- Phone Number -->
+          <div class="space-y-2">
+          {{ form.phone_number.label_tag }}
+          {{ form.phone_number }}
+          {% for error in form.phone_number.errors %}
+            <p class="text-red-600 text-sm">{{ error }}</p>
+          {% endfor %}
+        </div>
+          <!-- Password -->
+          <div class="space-y-2 relative">
+            {{ form.password1.label_tag }}
+            <div class="relative">
+              {{ form.password1 }}
+              <button type="button" class="absolute inset-y-0 right-0 px-3 text-gray-500" onclick="togglePassword('id_password1')">👁</button>
+            </div>
+            {% for error in form.password1.errors %}
+              <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="space-y-2 relative">
+            {{ form.password2.label_tag }}
+            <div class="relative">
+              {{ form.password2 }}
+              <button type="button" class="absolute inset-y-0 right-0 px-3 text-gray-500" onclick="togglePassword('id_password2')">👁</button>
+            </div>
+            {% for error in form.password2.errors %}
+              <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+            Create Account
+          </button>
+        </form>
+
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-blue-600 hover:underline font-medium">Sign in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword(id) {
+      const field = document.getElementById(id);
+      field.type = field.type === "password" ? "text" : "password";
+    }
+  </script>
+</body>
+</html>
